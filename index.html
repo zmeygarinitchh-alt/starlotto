@@ -13,11 +13,33 @@
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0b0f19 70%, #030712 100%); color: #f3f4f6; }
-        .glass-card { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #090d16, #1e1b4b, #0f172a, #31103f); 
+            background-size: 300% 300%;
+            animation: gradientShift 18s ease infinite;
+            color: #f3f4f6; 
+            overflow-x: hidden;
+        }
+        .glass-card { 
+            background: rgba(17, 24, 39, 0.82); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.12); 
+            box-shadow: 0 10px 35px -10px rgba(0, 0, 0, 0.6); 
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(236, 72, 153, 0.35);
+            box-shadow: 0 15px 45px -10px rgba(236, 72, 153, 0.25);
+        }
         .neon-glow { box-shadow: 0 0 35px rgba(236, 72, 153, 0.4), inset 0 0 15px rgba(236, 72, 153, 0.1); }
         .gold-glow { box-shadow: 0 0 35px rgba(234, 179, 8, 0.4), inset 0 0 15px rgba(234, 179, 8, 0.1); }
-        .wheel-shadow { box-shadow: 0 0 45px rgba(236, 72, 153, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.9); }
+        .wheel-shadow { box-shadow: 0 0 50px rgba(236, 72, 153, 0.55), inset 0 0 25px rgba(0, 0, 0, 0.9); }
         .wheel-bulb { animation: blink 1s infinite alternate; }
         @keyframes blink { 0% { opacity: 0.2; filter: drop-shadow(0 0 2px #fde047); } 100% { opacity: 1; filter: drop-shadow(0 0 12px #fde047); } }
         .clip-triangle { clip-path: polygon(50% 100%, 0 0, 100% 0); }
@@ -25,11 +47,16 @@
             0% { transform: translateY(-30px) rotate(0deg); opacity: 0; } 
             15% { opacity: 1; }
             85% { opacity: 1; }
-            100% { transform: translateY(260px) rotate(360deg); opacity: 0; } 
+            100% { transform: translateY(280px) rotate(360deg); opacity: 0; } 
         }
         .falling-star { position: absolute; animation: fall 3.5s linear infinite; cursor: pointer; user-select: none; z-index: 10; }
         .falling-star-boost { position: absolute; animation: fall 2.0s linear infinite; cursor: pointer; user-select: none; z-index: 12; }
         #space-canvas { display: block; width: 100%; height: 320px; border-radius: 1.5rem; }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(234,179,8,0.5)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 20px rgba(234,179,8,0.9)); }
+        }
+        .jackpot-anim { animation: pulseGlow 2.5s infinite ease-in-out; }
     </style>
 </head>
 <body class="min-h-screen pb-28 selection:bg-pink-500 selection:text-white">
@@ -37,14 +64,14 @@
     <!-- Header -->
     <header class="sticky top-0 z-50 glass-card px-4 py-3.5 flex justify-between items-center border-b border-gray-800/80">
         <div class="flex items-center space-x-2.5">
-            <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-pink-600 via-purple-600 to-yellow-400 flex items-center justify-center text-white font-black text-lg shadow-[0_0_15px_rgba(236,72,153,0.6)]">⭐</div>
+            <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-pink-600 via-purple-600 to-yellow-400 flex items-center justify-center text-white font-black text-lg shadow-[0_0_15px_rgba(236,72,153,0.6)] animate-pulse">⭐</div>
             <span class="font-black text-lg tracking-wide bg-gradient-to-r from-white via-pink-200 to-yellow-200 bg-clip-text text-transparent drop-shadow-sm">Звёздное Лото</span>
         </div>
         <div class="flex items-center space-x-2.5">
             <div class="bg-gray-950/90 px-3.5 py-1.5 rounded-2xl border border-yellow-500/40 flex items-center space-x-2 shadow-inner">
                 <span class="text-yellow-400 font-extrabold text-sm tracking-wide" id="header-balance">🪙 1,000.00</span>
             </div>
-            <button onclick="openTelegram()" class="bg-gradient-to-r from-purple-600 to-pink-600 px-3.5 py-1.5 rounded-2xl text-xs font-bold text-white shadow-lg hover:opacity-90 transition flex items-center gap-1 border border-pink-400/30">
+            <button onclick="openTelegram()" class="bg-gradient-to-r from-purple-600 to-pink-600 px-3.5 py-1.5 rounded-2xl text-xs font-bold text-white shadow-lg hover:opacity-90 transition flex items-center gap-1 border border-pink-400/30 active:scale-95">
                 <span>✈️</span> <span>Бот</span>
             </button>
         </div>
@@ -56,7 +83,7 @@
         <!-- Tab: Casino & Games -->
         <div id="tab-casino" class="space-y-6">
             <!-- Jackpot Card -->
-            <section class="glass-card rounded-3xl p-5 gold-glow relative overflow-hidden">
+            <section class="glass-card rounded-3xl p-5 gold-glow relative overflow-hidden jackpot-anim">
                 <div class="flex justify-between items-center mb-2.5">
                     <span class="text-xs uppercase tracking-wider text-yellow-400 font-extrabold">🎰 Прогрессивный Джекпот</span>
                     <span class="text-xs text-gray-300 bg-gray-900/90 px-3 py-1 rounded-full border border-yellow-500/20" id="jackpot-timer">⏳ 01:59:45</span>
@@ -82,7 +109,7 @@
                         <span>Ставка (1 - 5000):</span>
                         <input type="number" id="slot-custom-bet" min="1" max="5000" value="50" oninput="onSlotInputChange(this.value)" class="w-20 bg-gray-950 text-yellow-400 font-bold px-2 py-1 rounded-xl border border-yellow-500/40 text-center outline-none">
                     </div>
-                    <button onclick="spinSlots()" id="slot-spin-btn" class="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-950 font-black py-3.5 rounded-2xl shadow-lg transition active:scale-95 text-sm">Дернуть рычаг (50 🪙)</button>
+                    <button onclick="spinSlots()" id="slot-spin-btn" class="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-950 font-black py-3.5 rounded-2xl shadow-lg transition active:scale-95 text-sm hover:brightness-110">Дернуть рычаг (50 🪙)</button>
                 </div>
             </section>
 
@@ -98,24 +125,40 @@
                     </div>
                     <div id="dice-result" class="text-xs font-medium text-gray-300">Бросайте кубики!</div>
                 </div>
-                <button onclick="playDice()" id="roll-btn" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black py-3.5 rounded-2xl shadow-lg transition active:scale-95 text-sm">Бросить кости (50 🪙)</button>
+                <button onclick="playDice()" id="roll-btn" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black py-3.5 rounded-2xl shadow-lg transition active:scale-95 text-sm hover:brightness-110">Бросить кости (50 🪙)</button>
             </section>
 
-            <!-- Wheel of Fortune -->
+            <!-- Wheel of Fortune with Smooth Physics & Glow -->
             <section class="glass-card rounded-3xl p-5 relative overflow-hidden">
                 <div class="flex justify-between items-center mb-2">
                     <h2 class="text-base font-black text-white flex items-center gap-2">🎡 Колесо Дня</h2>
                     <span id="wheel-timer-badge" class="text-xs text-pink-300 bg-pink-950/70 px-3 py-1 rounded-full border border-pink-500/40 font-bold">Доступно!</span>
                 </div>
-                <div class="relative w-64 h-64 mx-auto my-4 flex items-center justify-center cursor-pointer select-none" onclick="spinWheel()">
-                    <div id="wheel" class="w-full h-full rounded-full border-4 border-yellow-400 relative overflow-hidden flex items-center justify-center wheel-shadow transition-transform duration-1000" style="transition: transform 3.5s cubic-bezier(0.15, 0.9, 0.2, 1); background: conic-gradient(#8b5cf6 0deg 45deg, #4c1d95 45deg 90deg, #ec4899 90deg 135deg, #831843 135deg 180deg, #06b6d4 180deg 225deg, #164e63 225deg 270deg, #f59e0b 270deg 315deg, #78350f 315deg 360deg);">
-                        <span class="absolute top-4 text-xs font-black text-white">15 🪙</span>
-                        <span class="absolute right-4 text-xs font-black text-cyan-200 rotate-90">🎟️</span>
-                        <span class="absolute bottom-4 text-xs font-black text-yellow-300">100 🪙</span>
-                        <span class="absolute left-4 text-xs font-black text-pink-200 -rotate-90">50 🪙</span>
+                <div class="relative w-72 h-72 mx-auto my-4 flex items-center justify-center cursor-pointer select-none group" onclick="spinWheel()">
+                    <div class="absolute -top-3 z-30 flex flex-col items-center">
+                        <div class="w-7 h-7 bg-gradient-to-b from-yellow-300 via-yellow-400 to-pink-500 clip-triangle shadow-[0_0_15px_rgba(234,179,8,0.9)] transform rotate-180 border-t-2 border-white"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-300 -mt-1 shadow-[0_0_10px_#fde047]"></div>
+                    </div>
+                    <div class="absolute inset-0 rounded-full border-4 border-yellow-400/90 p-1.5 flex items-center justify-center bg-gray-950/95 shadow-[0_0_40px_rgba(234,179,8,0.4)]">
+                        <div class="absolute top-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-yellow-300 shadow-[0_0_10px_#fde047] wheel-bulb"></div>
+                        <div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-pink-400 shadow-[0_0_10px_#f472b6] wheel-bulb"></div>
+                        <div class="absolute left-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-yellow-300 shadow-[0_0_10px_#fde047] wheel-bulb"></div>
+                        <div class="absolute right-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-pink-400 shadow-[0_0_10px_#f472b6] wheel-bulb"></div>
+                    </div>
+                    <div id="wheel" class="w-60 h-60 rounded-full border-4 border-yellow-400 relative overflow-hidden flex items-center justify-center wheel-shadow transition-transform duration-1000" style="transition: transform 4s cubic-bezier(0.1, 0.9, 0.1, 1); background: conic-gradient(#8b5cf6 0deg 45deg, #4c1d95 45deg 90deg, #ec4899 90deg 135deg, #831843 135deg 180deg, #06b6d4 180deg 225deg, #164e63 225deg 270deg, #f59e0b 270deg 315deg, #78350f 315deg 360deg);">
+                        <span class="absolute top-4 text-xs font-black text-white tracking-widest drop-shadow">15 🪙</span>
+                        <span class="absolute right-4 text-xs font-black text-cyan-200 tracking-widest rotate-90 drop-shadow">🎟️</span>
+                        <span class="absolute bottom-4 text-xs font-black text-yellow-300 tracking-widest drop-shadow">100 🪙</span>
+                        <span class="absolute left-4 text-xs font-black text-pink-200 tracking-widest -rotate-90 drop-shadow">50 🪙</span>
+                    </div>
+                    <div class="absolute z-20 w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-500 via-pink-500 to-yellow-300 p-1 shadow-[0_0_20px_rgba(234,179,8,0.8)] flex items-center justify-center group-hover:scale-110 active:scale-95 transition transform border-2 border-white">
+                        <div class="w-full h-full rounded-full bg-gray-950 flex flex-col items-center justify-center shadow-inner">
+                            <span class="text-xl leading-none">⭐</span>
+                            <span class="text-[9px] font-black text-yellow-300 uppercase tracking-tighter mt-0.5">КРУТИТЬ</span>
+                        </div>
                     </div>
                 </div>
-                <button onclick="spinWheel()" id="spin-btn" class="w-full bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 text-white font-black py-3.5 rounded-2xl shadow-lg transition active:scale-95 text-sm">Крутить Колесо (Бесплатно)</button>
+                <button onclick="spinWheel()" id="spin-btn" class="w-full bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 text-white font-black py-3.5 rounded-2xl shadow-lg transition active:scale-95 text-sm hover:brightness-110">Крутить Колесо (Бесплатно)</button>
             </section>
         </div>
 
@@ -127,14 +170,14 @@
                     <h3 class="font-bold text-white text-sm">Ежедневная отметка</h3>
                     <p class="text-xs text-gray-300 mt-0.5">Получайте бонус каждый день</p>
                 </div>
-                <button onclick="claimDaily()" id="daily-btn" class="bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-lg transition active:scale-95">Забрать 50🪙</button>
+                <button onclick="claimDaily()" id="daily-btn" class="bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-lg transition active:scale-95 hover:brightness-110">Забрать 50🪙</button>
             </div>
             <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-gray-800">
                 <div>
                     <h3 class="font-bold text-white text-sm">Подписка на канал</h3>
                     <p class="text-xs text-gray-300 mt-0.5">Бонус за подписку</p>
                 </div>
-                <button onclick="verifySub()" id="verify-sub-btn" class="bg-gradient-to-r from-pink-600 to-purple-600 px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-lg transition active:scale-95">Проверить (+150🪙)</button>
+                <button onclick="verifySub()" id="verify-sub-btn" class="bg-gradient-to-r from-pink-600 to-purple-600 px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-lg transition active:scale-95 hover:brightness-110">Проверить (+150🪙)</button>
             </div>
         </div>
 
@@ -163,12 +206,12 @@
                         <h3 class="font-black text-white text-sm">🛰️ Орбитальная Станция</h3>
                         <p class="text-[11px] text-gray-300">Доход в час: <span id="income-per-hour" class="text-cyan-400 font-bold">+120 🪙/ч</span></p>
                     </div>
-                    <button onclick="claimPassiveIncome()" class="bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-2 rounded-xl text-xs font-black text-white active:scale-95 transition">Собрать</button>
+                    <button onclick="claimPassiveIncome()" class="bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-2 rounded-xl text-xs font-black text-white active:scale-95 transition hover:brightness-110">Собрать</button>
                 </div>
                 <div class="space-y-2 pt-2 border-t border-gray-800">
                     <div class="flex justify-between items-center bg-gray-900/80 p-3 rounded-2xl">
                         <span class="text-xs font-bold text-white">Лунная вышка (+50 🪙/ч)</span>
-                        <button onclick="upgradeStation(1, 500, 50)" class="bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded-xl text-xs font-bold text-white transition">Улучшить (500 🪙)</button>
+                        <button onclick="upgradeStation(1, 500, 50)" class="bg-blue-600 hover:bg-blue-500 px-3 py-1.5 rounded-xl text-xs font-bold text-white transition active:scale-95">Улучшить (500 🪙)</button>
                     </div>
                 </div>
             </section>
@@ -186,19 +229,19 @@
 
     <!-- Bottom Navigation Bar -->
     <nav class="fixed bottom-0 left-0 right-0 glass-card border-t border-gray-800/80 px-2 py-2.5 flex justify-around items-center z-40">
-        <button onclick="switchTab('casino')" id="nav-casino" class="flex flex-col items-center text-pink-400 font-extrabold transition">
+        <button onclick="switchTab('casino')" id="nav-casino" class="flex flex-col items-center text-pink-400 font-extrabold transition transform hover:scale-105">
             <span class="text-xl">🎰</span><span class="text-[9px] mt-0.5">Казино</span>
         </button>
-        <button onclick="switchTab('bonuses')" id="nav-bonuses" class="flex flex-col items-center text-gray-400 hover:text-white transition font-medium">
+        <button onclick="switchTab('bonuses')" id="nav-bonuses" class="flex flex-col items-center text-gray-400 hover:text-white transition transform hover:scale-105 font-medium">
             <span class="text-xl">🎁</span><span class="text-[9px] mt-0.5">Бонусы</span>
         </button>
-        <button onclick="switchTab('tapper')" id="nav-tapper" class="flex flex-col items-center text-gray-400 hover:text-white transition font-medium">
+        <button onclick="switchTab('tapper')" id="nav-tapper" class="flex flex-col items-center text-gray-400 hover:text-white transition transform hover:scale-105 font-medium">
             <span class="text-xl">⭐</span><span class="text-[9px] mt-0.5">Тапалка</span>
         </button>
-        <button onclick="switchTab('space')" id="nav-space" class="flex flex-col items-center text-gray-400 hover:text-white transition font-medium">
+        <button onclick="switchTab('space')" id="nav-space" class="flex flex-col items-center text-gray-400 hover:text-white transition transform hover:scale-105 font-medium">
             <span class="text-xl">🌌</span><span class="text-[9px] mt-0.5">Космос</span>
         </button>
-        <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center text-gray-400 hover:text-white transition font-medium">
+        <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center text-gray-400 hover:text-white transition transform hover:scale-105 font-medium">
             <span class="text-xl">👤</span><span class="text-[9px] mt-0.5">Профиль</span>
         </button>
     </nav>
@@ -209,7 +252,7 @@
             <div id="modal-icon" class="text-5xl animate-bounce">🎉</div>
             <h3 id="modal-title" class="text-lg font-black text-white">Выигрыш!</h3>
             <p id="modal-text" class="text-xs text-gray-300 leading-relaxed">Действие выполнено</p>
-            <button onclick="closeModal()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black py-3 rounded-2xl text-sm">Отлично</button>
+            <button onclick="closeModal()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black py-3 rounded-2xl text-sm shadow-lg hover:brightness-110 active:scale-95 transition">Отлично</button>
         </div>
     </div>
 
@@ -227,6 +270,43 @@
         let boostInterval = null;
         let spawnerInterval = null;
         let currentSpawnSpeed = 800;
+
+        // Web Audio Sound Synthesizer
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'spin') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'win') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(500, audioCtx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(700, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } else if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            }
+        }
 
         const tg = window.Telegram?.WebApp;
         if (tg) { tg.ready(); tg.expand(); }
@@ -248,10 +328,11 @@
         }
 
         function switchTab(tab) {
+            playSound('click');
             ['casino', 'bonuses', 'tapper', 'space', 'profile'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`nav-${t}`);
-                if (btn) { btn.classList.remove('text-pink-400', 'font-extrabold'); btn.classList.add('text-gray-400', 'font-medium'); }
+                if (btn) { btn.classList.remove('text-pink-400', 'font-extrabold', 'scale-105'); btn.classList.add('text-gray-400', 'font-medium'); }
             });
             document.getElementById(`tab-${tab}`).classList.remove('hidden');
             const active = document.getElementById(`nav-${tab}`);
@@ -274,6 +355,7 @@
 
                 const collectStar = (e) => {
                     e.stopPropagation();
+                    playSound('click');
                     if (isSpecialBoostStar) {
                         activateBoostMode();
                     } else {
@@ -319,24 +401,41 @@
             if (userBalance < slotBet) { showModal('⚠️ Ошибка', 'Недостаточно средств!', '❌'); return; }
             userBalance -= slotBet;
             updateUI();
+            playSound('spin');
+
             const r1 = document.getElementById('reel-1');
             const r2 = document.getElementById('reel-2');
             const r3 = document.getElementById('reel-3');
-            r1.innerText = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
-            r2.innerText = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
-            r3.innerText = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
-            if (r1.innerText === '7️⃣' && r2.innerText === '7️⃣' && r3.innerText === '7️⃣') {
-                userBalance += jackpotPool;
-                showModal('🏆 СУПЕР ДЖЕКПОТ!', `Вы выиграли прогрессивный банк: +${jackpotPool.toFixed(2)} коинов!`, '👑');
-                jackpotPool = 5000;
-            } else if (r1.innerText === r2.innerText && r2.innerText === r3.innerText) {
-                const win = slotBet * 10;
-                userBalance += win;
-                showModal('🎰 ДЖЕКПОТ!', `Вы выиграли +${win} коинов!`, '🏆');
-            } else {
-                showModal('😢 Повезет в следующий раз', 'Попробуйте снова!', '🍀');
-            }
-            updateUI();
+            
+            let count = 0;
+            const anim = setInterval(() => {
+                r1.innerText = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+                r2.innerText = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+                r3.innerText = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+                count++;
+                if (count > 12) {
+                    clearInterval(anim);
+                    const final1 = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+                    const final2 = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+                    const final3 = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+                    r1.innerText = final1; r2.innerText = final2; r3.innerText = final3;
+
+                    if (final1 === '7️⃣' && final2 === '7️⃣' && final3 === '7️⃣') {
+                        userBalance += jackpotPool;
+                        playSound('win');
+                        showModal('🏆 СУПЕР ДЖЕКПОТ!', `Вы выиграли прогрессивный банк: +${jackpotPool.toFixed(2)} коинов!`, '👑');
+                        jackpotPool = 5000;
+                    } else if (final1 === final2 && final2 === final3) {
+                        const win = slotBet * 10;
+                        userBalance += win;
+                        playSound('win');
+                        showModal('🎰 ДЖЕКПОТ!', `Вы выиграли +${win} коинов!`, '🏆');
+                    } else {
+                        showModal('😢 Повезет в следующий раз', 'Попробуйте снова!', '🍀');
+                    }
+                    updateUI();
+                }
+            }, 80);
         }
         function onSlotInputChange(val) { slotBet = Math.max(1, Math.min(5000, parseInt(val) || 50)); }
 
@@ -344,14 +443,18 @@
             if (userBalance < currentBet) { showModal('⚠️ Ошибка', 'Недостаточно средств!', '❌'); return; }
             userBalance -= currentBet;
             updateUI();
+            playSound('spin');
+
             const val1 = Math.floor(Math.random() * 6) + 1;
             const val2 = Math.floor(Math.random() * 6) + 1;
             const total = val1 + val2;
             document.getElementById('dice-1').innerText = ['🎲', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'][val1];
             document.getElementById('dice-2').innerText = ['🎲', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'][val2];
+            
             if (total >= 7) {
                 const win = currentBet * 2;
                 userBalance += win;
+                playSound('win');
                 showModal('🎉 Победа в кости!', `Сумма ${total} принесла +${win} коинов!`, '🎲');
             } else {
                 showModal('😢 Поражение', `Выпала сумма ${total}. Попробуйте еще раз!`, '❌');
@@ -359,20 +462,22 @@
             updateUI();
         }
 
-        // --- Wheel ---
+        // --- Wheel with Animation ---
         function spinWheel() {
             const wheel = document.getElementById('wheel');
-            wheel.style.transform = `rotate(${Math.random() * 720 + 1440}deg)`;
+            playSound('spin');
+            wheel.style.transform = `rotate(${Math.random() * 720 + 2160}deg)`;
             setTimeout(() => {
                 userBalance += 100;
+                playSound('win');
                 showModal('🎡 Колесо Дня', 'Вы выиграли +100 бонусных коинов!', '🎁');
                 updateUI();
-            }, 3500);
+            }, 4000);
         }
 
         // --- Bonuses ---
-        function claimDaily() { userBalance += 50; updateUI(); showModal('📅 Бонус', 'Получено +50 коинов!', '✨'); }
-        function verifySub() { userBalance += 150; updateUI(); showModal('📢 Подписка', 'Проверено! Начислено +150 коинов!', '⭐'); }
+        function claimDaily() { userBalance += 50; updateUI(); playSound('win'); showModal('📅 Бонус', 'Получено +50 коинов!', '✨'); }
+        function verifySub() { userBalance += 150; updateUI(); playSound('win'); showModal('📢 Подписка', 'Проверено! Начислено +150 коинов!', '⭐'); }
 
         // --- 3D Space Game & Passive Income ---
         let scene, camera, renderer, ship, moon, crystals3D = [];
@@ -437,6 +542,7 @@
                     crystals3D.splice(index, 1);
                     spaceCrystalsCollected++;
                     userBalance += 25;
+                    playSound('win');
                     document.getElementById('space-crystals-hud').innerText = `💎 ${spaceCrystalsCollected} / ${totalSpaceCrystals}`;
                     updateUI();
                 }
@@ -448,6 +554,7 @@
             if (userBalance < cost) { showModal('⚠️ Ошибка', 'Недостаточно коинов!', '❌'); return; }
             userBalance -= cost;
             incomePerHour += inc;
+            playSound('win');
             updateUI();
             showModal('🛰️ Успех', `Станция улучшена! Доход: +${incomePerHour} 🪙/ч`, '🚀');
         }
@@ -455,6 +562,7 @@
         function claimPassiveIncome() {
             const added = incomePerHour / 24;
             userBalance += added;
+            playSound('win');
             updateUI();
             showModal('🪙 Собрано!', `Вы получили +${added.toFixed(2)} коинов с орбиты!`, '🌌');
         }
@@ -477,7 +585,7 @@
             document.getElementById('modal-icon').innerText = icon;
             document.getElementById('modal').classList.remove('hidden');
         }
-        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); playSound('click'); }
         function openTelegram() { window.open('https://t.me/+fQ4oRb7-Jk04MDQy', '_blank'); }
     </script>
 </body>
