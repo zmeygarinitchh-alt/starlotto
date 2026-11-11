@@ -19,6 +19,7 @@
         .clip-triangle { clip-path: polygon(50% 100%, 0 0, 100% 0); }
         @keyframes float-star { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.05); } }
         .floating-effect { animation: float-star 3s ease-in-out infinite; }
+        .tap-pulse { transform: scale(0.92); transition: transform 0.1s ease; }
     </style>
 </head>
 <body class="min-h-screen pb-28 selection:bg-pink-500 selection:text-white">
@@ -31,7 +32,7 @@
         </div>
         <div class="flex items-center space-x-2.5">
             <div class="bg-gray-950/90 px-3.5 py-1.5 rounded-2xl border border-yellow-500/40 flex items-center space-x-2 shadow-inner">
-                <span class="text-yellow-400 font-extrabold text-sm tracking-wide" id="header-balance">🪙 1,250.00</span>
+                <span class="text-yellow-400 font-extrabold text-sm tracking-wide" id="header-balance">🪙 1,350.00</span>
             </div>
             <button onclick="openTelegram()" class="bg-gradient-to-r from-purple-600 to-pink-600 px-3.5 py-1.5 rounded-2xl text-xs font-bold text-white shadow-lg hover:opacity-90 transition flex items-center gap-1 border border-pink-400/30">
                 <span>✈️</span> <span>Бот</span>
@@ -249,10 +250,10 @@
         <div id="tab-tapper" class="space-y-5 text-center hidden">
             <h2 class="text-lg font-black text-white">Тапалка звёзд</h2>
             <p class="text-xs text-gray-300">Тапайте по падающим звёздам, чтобы зарабатывать коины в реальном времени!</p>
-            <div class="glass-card rounded-3xl p-8 relative overflow-hidden h-72 flex flex-col items-center justify-center cursor-pointer select-none group border border-pink-500/30 neon-glow" onclick="tapStar(event)">
+            <div id="tapper-card" class="glass-card rounded-3xl p-8 relative overflow-hidden h-72 flex flex-col items-center justify-center cursor-pointer select-none border border-pink-500/30 neon-glow active:scale-95 transition-transform duration-75">
                 <div class="absolute inset-0 bg-gradient-to-tr from-pink-500/10 via-purple-500/10 to-yellow-500/10 pointer-events-none"></div>
-                <div id="tap-star-icon" class="text-8xl floating-effect filter drop-shadow-[0_0_25px_rgba(234,179,8,0.8)]">⭐</div>
-                <div class="text-sm font-black text-yellow-300 mt-6 tracking-wide drop-shadow">Нажмите, чтобы собрать коины!</div>
+                <div id="tap-star-icon" class="text-8xl floating-effect filter drop-shadow-[0_0_25px_rgba(234,179,8,0.8)] pointer-events-none">⭐</div>
+                <div class="text-sm font-black text-yellow-300 mt-6 tracking-wide drop-shadow pointer-events-none">Нажмите, чтобы собрать коины!</div>
             </div>
         </div>
 
@@ -283,7 +284,7 @@
             <h2 class="text-lg font-black text-white">Профиль игрока</h2>
             <div class="glass-card rounded-2xl p-5 space-y-3.5 border border-gray-800 shadow-xl">
                 <div class="flex justify-between text-xs"><span class="text-gray-400">ID пользователя:</span> <span class="font-black text-gray-200">#784920</span></div>
-                <div class="flex justify-between text-xs"><span class="text-gray-400">Баланс коинов:</span> <span class="font-black text-yellow-400 text-sm" id="profile-balance">1,250.00</span></div>
+                <div class="flex justify-between text-xs"><span class="text-gray-400">Баланс коинов:</span> <span class="font-black text-yellow-400 text-sm" id="profile-balance">1,350.00</span></div>
                 <div class="flex justify-between text-xs"><span class="text-gray-400">Выиграно в джекпоте:</span> <span class="font-black text-green-400 text-sm" id="profile-jackpot-wins">0.00</span></div>
                 <div class="pt-3 border-t border-gray-800 flex gap-2.5">
                     <button onclick="openTelegramBot()" class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 py-2.5 rounded-xl text-xs font-black text-white transition shadow">Перейти в Бот</button>
@@ -348,7 +349,7 @@
     </div>
 
     <script>
-        let userBalance = 1250.00;
+        let userBalance = 1350.00;
         let jackpotPool = 14820.50;
         let userJackpotWon = 0.00;
         let currentBet = 50;
@@ -383,7 +384,50 @@
                 document.getElementById('consent-modal').classList.add('hidden');
             }
             updateUI();
+
+            // Setup direct click and touch listeners for the tapper card
+            const tapperCard = document.getElementById('tapper-card');
+            if (tapperCard) {
+                const handleTap = (e) => {
+                    e.preventDefault();
+                    userBalance += 1;
+                    
+                    // Visual feedback effect
+                    tapperCard.classList.add('tap-pulse');
+                    setTimeout(() => tapperCard.classList.remove('tap-pulse'), 100);
+
+                    // Floating text effect
+                    showFloatingCoin(e);
+                    updateUI();
+                };
+
+                tapperCard.addEventListener('click', handleTap);
+                tapperCard.addEventListener('touchstart', handleTap, { passive: false });
+            }
         });
+
+        function showFloatingCoin(e) {
+            const card = document.getElementById('tapper-card');
+            const rect = card.getBoundingClientRect();
+            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
+            const floatEl = document.createElement('div');
+            floatEl.innerText = '+1 🪙';
+            floatEl.className = 'absolute text-yellow-300 font-black text-lg pointer-events-none transition-all duration-700 ease-out z-30 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]';
+            floatEl.style.left = `${x}px`;
+            floatEl.style.top = `${y}px`;
+            card.appendChild(floatEl);
+
+            setTimeout(() => {
+                floatEl.style.transform = 'translateY(-50px) scale(1.2)';
+                floatEl.style.opacity = '0';
+            }, 20);
+
+            setTimeout(() => {
+                floatEl.remove();
+            }, 750);
+        }
 
         function updateUI() {
             document.getElementById('header-balance').innerText = `🪙 ${userBalance.toFixed(2)}`;
@@ -606,7 +650,7 @@
                 } else {
                     const formatted = formatTime(wheelCooldownSeconds);
                     badge.innerText = `⏳ ${formatted}`;
-                    badge.className = 'text-xs text-yellow-400 bg-yellow-950/70 px-3 py-1 rounded-full border border-yellow-500/40 font-bold shadow-inner';
+                    badge.className = 'text-xs text-yellow-400 bg-yellow-950/70 px-3 py-1 rounded-full border border-pink-500/40 font-bold shadow-inner';
                     btnText.innerText = `Перезарядка (${formatted})`;
                     document.getElementById('spin-btn').disabled = true;
                 }
@@ -650,15 +694,6 @@
             }
             userBalance -= 100;
             showModal('🎟️ Билет получен!', 'Вы успешно обменяли 100 коинов на билет текущего тиража!', '🎉');
-            updateUI();
-        }
-
-        function tapStar(event) {
-            userBalance += 1;
-            const star = document.getElementById('tap-star-icon');
-            star.classList.remove('floating-effect');
-            void star.offsetWidth;
-            star.classList.add('floating-effect');
             updateUI();
         }
 
@@ -706,4 +741,4 @@
         }
     </script>
 </body>
-  </html>
+</html>
