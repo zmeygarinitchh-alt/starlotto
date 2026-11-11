@@ -17,9 +17,13 @@
         .wheel-bulb { animation: blink 1s infinite alternate; }
         @keyframes blink { 0% { opacity: 0.2; filter: drop-shadow(0 0 2px #fde047); } 100% { opacity: 1; filter: drop-shadow(0 0 12px #fde047); } }
         .clip-triangle { clip-path: polygon(50% 100%, 0 0, 100% 0); }
-        @keyframes float-star { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.05); } }
-        .floating-effect { animation: float-star 3s ease-in-out infinite; }
-        .tap-pulse { transform: scale(0.92); transition: transform 0.1s ease; }
+        @keyframes fall { 
+            0% { transform: translateY(-30px) rotate(0deg); opacity: 0; } 
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { transform: translateY(260px) rotate(360deg); opacity: 0; } 
+        }
+        .falling-star { position: absolute; animation: fall 3.5s linear infinite; cursor: pointer; user-select: none; z-index: 10; }
     </style>
 </head>
 <body class="min-h-screen pb-28 selection:bg-pink-500 selection:text-white">
@@ -179,7 +183,7 @@
                         <div class="absolute bottom-5 right-5 w-2.5 h-2.5 rounded-full bg-yellow-400 wheel-bulb"></div>
                     </div>
 
-                    <!-- Rotating Wheel Disc -->
+                    <!-- Rotating Wheel Disc (8 Expanded Sectors) -->
                     <div id="wheel" class="w-60 h-60 rounded-full border-4 border-yellow-400 relative overflow-hidden flex items-center justify-center wheel-shadow transition-transform duration-1000" style="transition: transform 3.5s cubic-bezier(0.15, 0.9, 0.2, 1); background: conic-gradient(#8b5cf6 0deg 45deg, #4c1d95 45deg 90deg, #ec4899 90deg 135deg, #831843 135deg 180deg, #06b6d4 180deg 225deg, #164e63 225deg 270deg, #f59e0b 270deg 315deg, #78350f 315deg 360deg);">
                         <span class="absolute top-4 text-xs font-black text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">15 🪙</span>
                         <span class="absolute right-4 text-xs font-black text-cyan-200 tracking-widest rotate-90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">🎟️ БИЛЕТ</span>
@@ -198,7 +202,7 @@
                 </div>
 
                 <div class="flex items-center justify-center gap-4 text-[11px] text-gray-300 my-2.5 font-medium">
-                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-[0_0_6px_#8b5cf6]"></span> 5-20 Бонусов</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-[0_0_6px_#8b5cf6]"></span> 5-250 Бонусов</span>
                     <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee]"></span> Промо-билет</span>
                 </div>
 
@@ -240,20 +244,19 @@
             <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-gray-800">
                 <div>
                     <h3 class="font-bold text-white text-sm">Промо-билет</h3>
-                    <p class="text-xs text-gray-300 mt-0.5">Обмен 100 бонусов на лотерейный билет.</p>
+                    <p class="text-xs text-gray-300 mt-0.5">Обмен 500 коинов на лотерейный билет.</p>
                 </div>
-                <button onclick="buyPromoTicket()" class="bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-lg hover:opacity-90 transition transform active:scale-95">Обменять</button>
+                <button onclick="buyPromoTicket()" class="bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-lg hover:opacity-90 transition transform active:scale-95">Обменять (500🪙)</button>
             </div>
         </div>
 
-        <!-- Tab: Tapper -->
-        <div id="tab-tapper" class="space-y-5 text-center hidden">
-            <h2 class="text-lg font-black text-white">Тапалка звёзд</h2>
-            <p class="text-xs text-gray-300">Тапайте по падающим звёздам, чтобы зарабатывать коины в реальном времени!</p>
-            <div id="tapper-card" class="glass-card rounded-3xl p-8 relative overflow-hidden h-72 flex flex-col items-center justify-center cursor-pointer select-none border border-pink-500/30 neon-glow active:scale-95 transition-transform duration-75">
+        <!-- Tab: Tapper (Falling Stars Game) -->
+        <div id="tab-tapper" class="space-y-4 text-center hidden">
+            <h2 class="text-lg font-black text-white">Поймай звезду ⭐</h2>
+            <p class="text-xs text-gray-300">Ловите падающие звезды, чтобы собирать бонусные коины в реальном времени!</p>
+            <div id="tapper-arena" class="glass-card rounded-3xl relative overflow-hidden h-80 flex flex-col items-center justify-center select-none border border-pink-500/30 neon-glow">
                 <div class="absolute inset-0 bg-gradient-to-tr from-pink-500/10 via-purple-500/10 to-yellow-500/10 pointer-events-none"></div>
-                <div id="tap-star-icon" class="text-8xl floating-effect filter drop-shadow-[0_0_25px_rgba(234,179,8,0.8)] pointer-events-none">⭐</div>
-                <div class="text-sm font-black text-yellow-300 mt-6 tracking-wide drop-shadow pointer-events-none">Нажмите, чтобы собрать коины!</div>
+                <!-- Falling stars will dynamically spawn here -->
             </div>
         </div>
 
@@ -358,6 +361,8 @@
         let isSubscribed = false;
         let wheelCooldownTimer = null;
         let wheelCooldownSeconds = 0;
+        
+        let jackpotSeconds = 7185;
 
         document.getElementById('consent-checkbox').addEventListener('change', function() {
             const btn = document.getElementById('consent-btn');
@@ -384,40 +389,74 @@
                 document.getElementById('consent-modal').classList.add('hidden');
             }
             updateUI();
-
-            // Setup direct click and touch listeners for the tapper card
-            const tapperCard = document.getElementById('tapper-card');
-            if (tapperCard) {
-                const handleTap = (e) => {
-                    e.preventDefault();
-                    userBalance += 1;
-                    
-                    // Visual feedback effect
-                    tapperCard.classList.add('tap-pulse');
-                    setTimeout(() => tapperCard.classList.remove('tap-pulse'), 100);
-
-                    // Floating text effect
-                    showFloatingCoin(e);
-                    updateUI();
-                };
-
-                tapperCard.addEventListener('click', handleTap);
-                tapperCard.addEventListener('touchstart', handleTap, { passive: false });
-            }
+            startJackpotTimer();
+            startFallingStarsSpawner();
         });
 
-        function showFloatingCoin(e) {
-            const card = document.getElementById('tapper-card');
-            const rect = card.getBoundingClientRect();
-            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+        function startJackpotTimer() {
+            setInterval(() => {
+                jackpotSeconds--;
+                if (jackpotSeconds <= 0) {
+                    jackpotSeconds = 7200;
+                    triggerJackpotDraw();
+                }
+                const h = Math.floor(jackpotSeconds / 3600).toString().padStart(2, '0');
+                const m = Math.floor((jackpotSeconds % 3600) / 60).toString().padStart(2, '0');
+                const s = (jackpotSeconds % 60).toString().padStart(2, '0');
+                const timerEl = document.getElementById('jackpot-timer');
+                if (timerEl) {
+                    timerEl.innerText = `⏳ ${h}:${m}:${s}`;
+                }
+            }, 1000);
+        }
+
+        function startFallingStarsSpawner() {
+            const arena = document.getElementById('tapper-arena');
+            if (!arena) return;
+
+            setInterval(() => {
+                if (document.getElementById('tab-tapper').classList.contains('hidden')) return;
+
+                const star = document.createElement('div');
+                star.className = 'falling-star text-4xl filter drop-shadow-[0_0_12px_rgba(234,179,8,0.9)]';
+                star.innerText = '⭐';
+                
+                const randomX = Math.random() * (arena.clientWidth - 50);
+                star.style.left = `${randomX}px`;
+                star.style.top = `-20px`;
+
+                const collectStar = (e) => {
+                    e.stopPropagation();
+                    userBalance += 1;
+                    showFloatingCoin(e, arena);
+                    updateUI();
+                    star.remove();
+                };
+
+                star.addEventListener('click', collectStar);
+                star.addEventListener('touchstart', collectStar, { passive: true });
+
+                arena.appendChild(star);
+
+                setTimeout(() => {
+                    if (star.parentNode) star.remove();
+                }, 3500);
+            }, 800);
+        }
+
+        function showFloatingCoin(e, container) {
+            const rect = container.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
 
             const floatEl = document.createElement('div');
             floatEl.innerText = '+1 🪙';
             floatEl.className = 'absolute text-yellow-300 font-black text-lg pointer-events-none transition-all duration-700 ease-out z-30 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]';
             floatEl.style.left = `${x}px`;
             floatEl.style.top = `${y}px`;
-            card.appendChild(floatEl);
+            container.appendChild(floatEl);
 
             setTimeout(() => {
                 floatEl.style.transform = 'translateY(-50px) scale(1.2)';
@@ -624,7 +663,7 @@
                     userBalance += prize.amount;
                 }
                 
-                showModal('🎡 ВЫИГРЫШ В КОЛЕСЕ!', `Поздравляем! Вы выиграли: ${prize.name}!`, '🎉');
+                showModal('🎡 ВЫИГРЫШ В КОЛЕСЕ!', `Поздравляем! Под стрелочкой выпало: ${prize.name}! Начислено на баланс.`, '🎉');
                 startWheelCooldown(14400);
 
                 isWheelSpinning = false;
@@ -688,12 +727,13 @@
         }
 
         function buyPromoTicket() {
-            if (userBalance < 100) {
-                showModal('⚠️ Недостаточно средств', 'Вам нужно минимум 100 коинов для обмена на билет.', '❌');
+            const ticketPrice = 500;
+            if (userBalance < ticketPrice) {
+                showModal('⚠️ Недостаточно средств', `Вам нужно минимум ${ticketPrice} коинов для обмена на билет.`, '❌');
                 return;
             }
-            userBalance -= 100;
-            showModal('🎟️ Билет получен!', 'Вы успешно обменяли 100 коинов на билет текущего тиража!', '🎉');
+            userBalance -= ticketPrice;
+            showModal('🎟️ Билет получен!', `Вы успешно обменяли ${ticketPrice} коинов на билет текущего тиража!`, '🎉');
             updateUI();
         }
 
@@ -741,4 +781,4 @@
         }
     </script>
 </body>
-</html>
+                            </html>
