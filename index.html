@@ -270,7 +270,7 @@
             <h2 class="text-lg font-black text-white">Профиль игрока</h2>
             <div class="glass-card rounded-2xl p-5 space-y-3.5 border border-gray-800 shadow-xl">
                 <div class="flex justify-between text-xs"><span class="text-gray-400">Пользователь:</span> <span class="font-black text-gray-200" id="profile-username">Загрузка...</span></div>
-                <div class="flex justify-between text-xs"><span class="text-gray-400">Баланс коинов:</span> <span class="font-black text-yellow-400 text-sm" id="profile-balance">1,000.00</span></div>
+                <div class="flex justify-between text-xs"><span class="text-gray-400">Баланс коинов:</span> <span class="font-black text-yellow-400 text-sm" id="profile-balance">54.00</span></div>
                 <div class="flex justify-between text-xs"><span class="text-gray-400">Выиграно в джекпоте:</span> <span class="font-black text-green-400 text-sm" id="profile-jackpot-wins">0.00</span></div>
             </div>
         </div>
@@ -332,7 +332,7 @@
     <script>
         const REPLIT_API_BASE = 'https://898a1616-2766-4f88-9a36-ed1bd6528fce-00-12amuslyapqew.sisko.replit.dev/api';
         
-        let userBalance = 1000.00;
+        let userBalance = 54.00;
         let jackpotPool = 14820.50;
         let userJackpotWon = 0.00;
         let currentBet = 50;
@@ -351,7 +351,8 @@
         async function fetchServerBalance() {
             if (!tg || !tg.initData) return;
             try {
-                const response = await fetch(`${REPLIT_API_BASE}/get_balance`, {
+                const encodedInitData = encodeURIComponent(tg.initData);
+                const response = await fetch(`${REPLIT_API_BASE}/get_balance?init_data=${encodedInitData}`, {
                     headers: { 'X-Telegram-Init-Data': tg.initData }
                 });
                 if (response.ok) {
@@ -375,7 +376,7 @@
                         'Content-Type': 'application/json',
                         'X-Telegram-Init-Data': tg.initData
                     },
-                    body: JSON.stringify({ action: actionType, ...extraData })
+                    body: JSON.stringify({ action: actionType, init_data: tg.initData, ...extraData })
                 });
                 if (response.ok) {
                     const data = await response.json();
@@ -826,4 +827,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
