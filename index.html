@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Звёздное Лото & Казино</title>
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts Inter -->
@@ -36,7 +38,7 @@
         </div>
         <div class="flex items-center space-x-2.5">
             <div class="bg-gray-950/90 px-3.5 py-1.5 rounded-2xl border border-yellow-500/40 flex items-center space-x-2 shadow-inner">
-                <span class="text-yellow-400 font-extrabold text-sm tracking-wide" id="header-balance">🪙 1,350.00</span>
+                <span class="text-yellow-400 font-extrabold text-sm tracking-wide" id="header-balance">🪙 1,000.00</span>
             </div>
             <button onclick="openTelegram()" class="bg-gradient-to-r from-purple-600 to-pink-600 px-3.5 py-1.5 rounded-2xl text-xs font-bold text-white shadow-lg hover:opacity-90 transition flex items-center gap-1 border border-pink-400/30">
                 <span>✈️</span> <span>Бот</span>
@@ -47,7 +49,7 @@
     <!-- Main Content Container -->
     <main class="max-w-md mx-auto p-4 space-y-6">
 
-        <!-- Quick Navigation / Transition Buttons -->
+        <!-- Quick Navigation -->
         <section class="grid grid-cols-2 gap-3">
             <button onclick="openTelegramBot()" class="glass-card bg-gradient-to-r from-blue-600/25 to-indigo-600/25 hover:from-blue-600/40 hover:to-indigo-600/40 border border-blue-500/40 p-3.5 rounded-2xl flex items-center justify-center gap-2.5 transition active:scale-95 shadow-lg group">
                 <span class="text-2xl group-hover:scale-110 transition">🤖</span>
@@ -75,7 +77,6 @@
             <div class="text-3xl font-black text-white mb-2 tracking-tight bg-gradient-to-r from-white via-yellow-100 to-yellow-300 bg-clip-text text-transparent" id="jackpot-pool">🪙 14,820.50</div>
             <div class="text-xs text-gray-300 mb-4 leading-relaxed">1% от каждой проигранной ставки уходит в банк. Розыгрыш каждые 2 часа! Выпадение <code class="text-yellow-300 font-bold">7️⃣7️⃣7️⃣</code> дает весь банк!</div>
             
-            <!-- Live Winner Alert Box -->
             <div class="bg-gradient-to-r from-yellow-500/15 via-yellow-500/10 to-amber-500/15 border border-yellow-500/35 rounded-2xl p-3 text-xs flex items-center justify-between shadow-sm">
                 <span class="text-yellow-200 font-semibold truncate mr-2" id="winner-announcement">🏆 Победитель часа: @crypto_king (+1,450)!</span>
                 <button onclick="triggerJackpotDraw()" class="bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-950 font-black px-3 py-1.5 rounded-xl text-[11px] hover:opacity-90 transition shadow-md whitespace-nowrap active:scale-95">Розыгрыш</button>
@@ -162,16 +163,12 @@
                     <span id="wheel-timer-badge" class="text-xs text-pink-300 bg-pink-950/70 px-3 py-1 rounded-full border border-pink-500/40 font-bold shadow-inner">Доступно!</span>
                 </div>
                 
-                <!-- Decorated Wheel Container -->
                 <div class="relative w-72 h-72 mx-auto my-4 flex items-center justify-center cursor-pointer select-none group" onclick="spinWheel()">
-                    
-                    <!-- Top Arrow Marker / Pointer -->
                     <div class="absolute -top-3 z-30 flex flex-col items-center">
                         <div class="w-7 h-7 bg-gradient-to-b from-yellow-300 via-yellow-400 to-pink-500 clip-triangle shadow-[0_0_15px_rgba(234,179,8,0.9)] transform rotate-180 border-t-2 border-white"></div>
                         <div class="w-2.5 h-2.5 rounded-full bg-yellow-300 -mt-1 shadow-[0_0_10px_#fde047]"></div>
                     </div>
 
-                    <!-- Outer Light Bulbs Ring -->
                     <div class="absolute inset-0 rounded-full border-4 border-yellow-400/90 p-1.5 flex items-center justify-center bg-gray-950/95 shadow-[0_0_40px_rgba(234,179,8,0.4)]">
                         <div class="absolute top-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-yellow-300 shadow-[0_0_10px_#fde047] wheel-bulb"></div>
                         <div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-pink-400 shadow-[0_0_10px_#f472b6] wheel-bulb"></div>
@@ -183,7 +180,6 @@
                         <div class="absolute bottom-5 right-5 w-2.5 h-2.5 rounded-full bg-yellow-400 wheel-bulb"></div>
                     </div>
 
-                    <!-- Rotating Wheel Disc (8 Expanded Sectors) -->
                     <div id="wheel" class="w-60 h-60 rounded-full border-4 border-yellow-400 relative overflow-hidden flex items-center justify-center wheel-shadow transition-transform duration-1000" style="transition: transform 3.5s cubic-bezier(0.15, 0.9, 0.2, 1); background: conic-gradient(#8b5cf6 0deg 45deg, #4c1d95 45deg 90deg, #ec4899 90deg 135deg, #831843 135deg 180deg, #06b6d4 180deg 225deg, #164e63 225deg 270deg, #f59e0b 270deg 315deg, #78350f 315deg 360deg);">
                         <span class="absolute top-4 text-xs font-black text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">15 🪙</span>
                         <span class="absolute right-4 text-xs font-black text-cyan-200 tracking-widest rotate-90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">🎟️ БИЛЕТ</span>
@@ -191,14 +187,12 @@
                         <span class="absolute left-4 text-xs font-black text-pink-200 tracking-widest -rotate-90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">50 🪙</span>
                     </div>
 
-                    <!-- Center Pin -->
                     <div class="absolute z-20 w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-500 via-pink-500 to-yellow-300 p-1 shadow-[0_0_20px_rgba(234,179,8,0.8)] flex items-center justify-center group-hover:scale-110 active:scale-95 transition transform border-2 border-white">
                         <div class="w-full h-full rounded-full bg-gray-950 flex flex-col items-center justify-center shadow-inner">
                             <span class="text-xl leading-none">⭐</span>
                             <span class="text-[9px] font-black text-yellow-300 uppercase tracking-tighter mt-0.5">КРУТИТЬ</span>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="flex items-center justify-center gap-4 text-[11px] text-gray-300 my-2.5 font-medium">
@@ -216,7 +210,6 @@
         <div id="tab-bonuses" class="space-y-4 hidden">
             <h2 class="text-lg font-black text-white">Бонусы и задания</h2>
             
-            <!-- Daily Check-in -->
             <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-gray-800">
                 <div>
                     <h3 class="font-bold text-white text-sm">Ежедневная отметка</h3>
@@ -225,7 +218,6 @@
                 <button onclick="claimDaily()" id="daily-btn" class="bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-lg hover:opacity-90 transition transform active:scale-95">Забрать 50🪙</button>
             </div>
 
-            <!-- Channel Subscription -->
             <div class="glass-card rounded-2xl p-4 space-y-3 border border-gray-800">
                 <div class="flex items-center justify-between">
                     <div>
@@ -240,7 +232,6 @@
                 </div>
             </div>
 
-            <!-- Promo Ticket -->
             <div class="glass-card rounded-2xl p-4 flex items-center justify-between border border-gray-800">
                 <div>
                     <h3 class="font-bold text-white text-sm">Промо-билет</h3>
@@ -256,28 +247,20 @@
             <p class="text-xs text-gray-300">Ловите падающие звезды, чтобы собирать бонусные коины в реальном времени!</p>
             <div id="tapper-arena" class="glass-card rounded-3xl relative overflow-hidden h-80 flex flex-col items-center justify-center select-none border border-pink-500/30 neon-glow">
                 <div class="absolute inset-0 bg-gradient-to-tr from-pink-500/10 via-purple-500/10 to-yellow-500/10 pointer-events-none"></div>
-                <!-- Falling stars will dynamically spawn here -->
             </div>
         </div>
 
-        <!-- Tab: Info & FAQ / Privacy Policy -->
+        <!-- Tab: Info -->
         <div id="tab-info" class="space-y-4 hidden">
             <h2 class="text-lg font-black text-white flex items-center gap-2">📜 Правовая информация & FAQ</h2>
             <div class="glass-card rounded-2xl p-5 space-y-4 border border-gray-800 text-xs text-gray-300 leading-relaxed">
                 <div>
                     <h3 class="font-bold text-white text-sm mb-1">1. Развлекательный характер и статус игр</h3>
-                    <p>Все игры в приложении (слоты 777, кости, колесо фортуны и др.) созданы <strong>исключительно в развлекательных целях</strong>. Внутриигровые коины и баллы не являются реальной валютой, не имеют денежной ценности и не могут быть обналичены.</p>
+                    <p>Все игры в приложении созданы <strong>исключительно в развлекательных целях</strong>.</p>
                 </div>
                 <div>
                     <h3 class="font-bold text-white text-sm mb-1">2. Использование Telegram Stars ($XTR$)</h3>
-                    <p>Покупка билетов и премиум-опций осуществляется через официальную систему Telegram Stars ($XTR$) в соответствии с правилами мессенджера Telegram.</p>
-                </div>
-                <div>
-                    <h3 class="font-bold text-white text-sm mb-1">3. Конфиденциальность</h3>
-                    <p>Мы собираем только базовые данные Telegram ID и имя для отображения в таблице лидеров. Ваши персональные данные защищены и не передаются третьим лицам.</p>
-                </div>
-                <div class="pt-3 border-t border-gray-800 text-center">
-                    <button onclick="showFullPolicyModal()" class="w-full bg-gray-800 hover:bg-gray-700 py-3 rounded-xl font-bold text-white transition border border-gray-700 shadow">Читать полный текст Политики</button>
+                    <p>Покупка билетов осуществляется через официальную систему Telegram Stars.</p>
                 </div>
             </div>
         </div>
@@ -286,13 +269,9 @@
         <div id="tab-profile" class="space-y-4 hidden">
             <h2 class="text-lg font-black text-white">Профиль игрока</h2>
             <div class="glass-card rounded-2xl p-5 space-y-3.5 border border-gray-800 shadow-xl">
-                <div class="flex justify-between text-xs"><span class="text-gray-400">ID пользователя:</span> <span class="font-black text-gray-200">#784920</span></div>
-                <div class="flex justify-between text-xs"><span class="text-gray-400">Баланс коинов:</span> <span class="font-black text-yellow-400 text-sm" id="profile-balance">1,350.00</span></div>
+                <div class="flex justify-between text-xs"><span class="text-gray-400">Пользователь:</span> <span class="font-black text-gray-200" id="profile-username">Загрузка...</span></div>
+                <div class="flex justify-between text-xs"><span class="text-gray-400">Баланс коинов:</span> <span class="font-black text-yellow-400 text-sm" id="profile-balance">1,000.00</span></div>
                 <div class="flex justify-between text-xs"><span class="text-gray-400">Выиграно в джекпоте:</span> <span class="font-black text-green-400 text-sm" id="profile-jackpot-wins">0.00</span></div>
-                <div class="pt-3 border-t border-gray-800 flex gap-2.5">
-                    <button onclick="openTelegramBot()" class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 py-2.5 rounded-xl text-xs font-black text-white transition shadow">Перейти в Бот</button>
-                    <button onclick="openChannel()" class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 py-2.5 rounded-xl text-xs font-black text-white transition shadow">Канал</button>
-                </div>
             </div>
         </div>
 
@@ -322,16 +301,15 @@
         </button>
     </nav>
 
-    <!-- Mandatory Privacy Policy & Terms Consent Modal on First Launch -->
+    <!-- Mandatory Privacy Policy & Terms Consent Modal -->
     <div id="consent-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card rounded-3xl p-6 max-w-sm w-full space-y-4 border border-pink-500/40 shadow-2xl neon-glow">
             <div class="text-4xl text-center">⚖️</div>
             <h3 class="text-base font-black text-white text-center">Правила и конфиденциальность</h3>
             <div class="text-[11px] text-gray-300 max-h-48 overflow-y-auto space-y-2 pr-1 border border-gray-800 p-3 rounded-xl bg-gray-950/70">
                 <p>Добро пожаловать в <b>«Звёздное Лото & Казино»</b>!</p>
-                <p>1. Все игры носят исключительно <b>развлекательный характер</b>. Внутриигровые коины не имеют реальной денежной стоимости и не могут быть обналичены.</p>
-                <p>2. Проект использует платформу Telegram Stars ($XTR$) для официальных операций.</p>
-                <p>Нажимая кнопку согласия, вы подтверждаете, что вам исполнилось 18 лет, и вы принимаете Условия использования.</p>
+                <p>1. Все игры носят исключительно <b>развлекательный характер</b>.</p>
+                <p>2. Проект использует платформу Telegram Stars ($XTR$).</p>
             </div>
             <label class="flex items-center gap-2.5 cursor-pointer pt-1">
                 <input type="checkbox" id="consent-checkbox" class="w-4 h-4 rounded border-gray-700 text-pink-600 focus:ring-pink-500 bg-gray-900 cursor-pointer">
@@ -346,23 +324,70 @@
         <div class="glass-card rounded-3xl p-6 max-w-xs w-full text-center space-y-4 border border-pink-500/40 shadow-2xl neon-glow">
             <div id="modal-icon" class="text-5xl animate-bounce">🎉</div>
             <h3 id="modal-title" class="text-lg font-black text-white">Выигрыш!</h3>
-            <p id="modal-text" class="text-xs text-gray-300 leading-relaxed">Вы выиграли 100 коинов!</p>
+            <p id="modal-text" class="text-xs text-gray-300 leading-relaxed">Вы выиграли коины!</p>
             <button onclick="closeModal()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:opacity-90 text-white font-black py-3 rounded-2xl transition shadow-lg text-sm active:scale-95">Отлично</button>
         </div>
     </div>
 
     <script>
-        let userBalance = 1350.00;
+        const REPLIT_API_BASE = 'https://898a1616-2766-4f88-9a36-ed1bd6528fce-00-12amuslyapqew.sisko.replit.dev/api';
+        
+        let userBalance = 1000.00;
         let jackpotPool = 14820.50;
         let userJackpotWon = 0.00;
         let currentBet = 50;
         let slotBet = 50;
-        let streak = 1;
         let isSubscribed = false;
         let wheelCooldownTimer = null;
         let wheelCooldownSeconds = 0;
-        
         let jackpotSeconds = 7185;
+
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        async function fetchServerBalance() {
+            if (!tg || !tg.initData) return;
+            try {
+                const response = await fetch(`${REPLIT_API_BASE}/get_balance`, {
+                    headers: { 'X-Telegram-Init-Data': tg.initData }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.balance !== undefined) {
+                        userBalance = data.balance;
+                        updateUI();
+                    }
+                }
+            } catch (e) {
+                console.log('Используется локальный баланс');
+            }
+        }
+
+        async function updateServerBalance(actionType, extraData = {}) {
+            if (!tg || !tg.initData) return;
+            try {
+                const response = await fetch(`${REPLIT_API_BASE}/update_balance`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Telegram-Init-Data': tg.initData
+                    },
+                    body: JSON.stringify({ action: actionType, ...extraData })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.balance !== undefined) {
+                        userBalance = data.balance;
+                        updateUI();
+                    }
+                }
+            } catch (e) {
+                console.log('Синхронизация с сервером временно недоступна');
+            }
+        }
 
         document.getElementById('consent-checkbox').addEventListener('change', function() {
             const btn = document.getElementById('consent-btn');
@@ -388,6 +413,10 @@
             if (localStorage.getItem('privacy_consent') === 'true') {
                 document.getElementById('consent-modal').classList.add('hidden');
             }
+            if (tg?.initDataUnsafe?.user) {
+                document.getElementById('profile-username').innerText = `@${tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name}`;
+            }
+            fetchServerBalance();
             updateUI();
             startJackpotTimer();
             startFallingStarsSpawner();
@@ -557,12 +586,12 @@
 
             let multiplier = 0;
             if (s1 === '7️⃣' && s2 === '7️⃣' && s3 === '7️⃣') {
-                // Progressive Jackpot trigger on 777!
                 const jackpotWin = jackpotPool;
                 userJackpotWon += jackpotWin;
                 userBalance += jackpotWin;
                 jackpotPool = 5000.00;
-                showModal('🏆 СУПЕР ДЖЕКПОТ 777!', `Потрясающе! Выпали три семёрочки 7️⃣7️⃣7️⃣! Вы сорвали прогрессивный джекпот: +${jackpotWin.toFixed(2)} коинов!`, '👑');
+                showModal('🏆 СУПЕР ДЖЕКПОТ 777!', `Вы сорвали прогрессивный джекпот: +${jackpotWin.toFixed(2)} коинов!`, '👑');
+                updateServerBalance('casino_play', { win: jackpotWin });
                 isSlotSpinning = false;
                 document.getElementById('slot-spin-btn').disabled = false;
                 updateUI();
@@ -580,10 +609,12 @@
             if (multiplier > 0) {
                 let win = slotBet * multiplier;
                 userBalance += win;
-                document.getElementById('slot-result').innerHTML = `🎉 Выигрыш! Комбинация дает <b class="text-yellow-400">x${multiplier} (+${win} 🪙)</b>!`;
-                showModal('🎰 ВЫИГРЫШ В СЛОТАХ!', `Поздравляем! Выпали ${s1}${s2}${s3}! Ваш выигрыш: +${win} коинов (x${multiplier})!`, '🏆');
+                document.getElementById('slot-result').innerHTML = `🎉 Выигрыш! <b class="text-yellow-400">x${multiplier} (+${win} 🪙)</b>!`;
+                showModal('🎰 ВЫИГРЫШ В СЛОТАХ!', `Выпали ${s1}${s2}${s3}! Ваш выигрыш: +${win} коинов!`, '🏆');
+                updateServerBalance('casino_play', { win: win });
             } else {
-                document.getElementById('slot-result').innerText = '😢 Ничего не выпало. Попробуйте ещё раз!';
+                document.getElementById('slot-result').innerText = '😢 Попробуйте ещё раз!';
+                updateServerBalance('casino_play', { win: 0 });
             }
 
             isSlotSpinning = false;
@@ -629,8 +660,10 @@
                         userBalance += winAmount;
                         resultEl.innerHTML = `Победа! Выпала сумма: <b class="text-yellow-400">${total}</b> (+${winAmount} 🪙)`;
                         showModal('🎉 ВЫИГРЫШ В КОСТИ!', `Выпала сумма ${total}! Вы выиграли ${winAmount} коинов!`, '🎲');
+                        updateServerBalance('casino_play', { win: winAmount });
                     } else {
                         resultEl.innerHTML = `Вы проиграли. Выпала сумма: <b class="text-red-400">${total}</b>.`;
+                        updateServerBalance('casino_play', { win: 0 });
                     }
 
                     isDiceRolling = false;
@@ -654,7 +687,7 @@
         function spinWheel() {
             if (isWheelSpinning) return;
             if (wheelCooldownSeconds > 0) {
-                showModal('⏳ Перезарядка колеса', `Колесо дня восстанавливается! Осталось: ${formatTime(wheelCooldownSeconds)}`, '⏳');
+                showModal('⏳ Перезарядка колеса', `Колесо восстановливается! Осталось: ${formatTime(wheelCooldownSeconds)}`, '⏳');
                 return;
             }
 
@@ -674,9 +707,10 @@
             setTimeout(() => {
                 if (prize.type === 'coins') {
                     userBalance += prize.amount;
+                    updateServerBalance('spin', { win: prize.amount });
                 }
                 
-                showModal('🎡 ВЫИГРЫШ В КОЛЕСЕ!', `Поздравляем! Под стрелочкой выпало: ${prize.name}! Начислено на баланс.`, '🎉');
+                showModal('🎡 ВЫИГРЫШ В КОЛЕСЕ!', `Выпало: ${prize.name}! Начислено на баланс.`, '🎉');
                 startWheelCooldown(14400);
 
                 isWheelSpinning = false;
@@ -718,7 +752,8 @@
 
         function claimDaily() {
             userBalance += 50;
-            showModal('📅 Ежедневный бонус', 'Вы успешно получили +50 коинов за вход!', '✨');
+            updateServerBalance('checkin');
+            showModal('📅 Ежедневный бонус', 'Вы успешно получили +50 коинов!', '✨');
             document.getElementById('daily-btn').disabled = true;
             document.getElementById('daily-btn').innerText = 'Получено';
             document.getElementById('daily-btn').classList.add('opacity-50');
@@ -732,6 +767,7 @@
             }
             isSubscribed = true;
             userBalance += 150;
+            updateServerBalance('subscribe');
             showModal('🎉 Подписка подтверждена!', 'Вам начислено +150 коинов!', '⭐');
             document.getElementById('verify-sub-btn').innerText = 'Подтверждено';
             document.getElementById('verify-sub-btn').disabled = true;
@@ -742,11 +778,11 @@
         function buyPromoTicket() {
             const ticketPrice = 500;
             if (userBalance < ticketPrice) {
-                showModal('⚠️ Недостаточно средств', `Вам нужно минимум ${ticketPrice} коинов для обмена на билет.`, '❌');
+                showModal('⚠️ Недостаточно средств', `Нужно минимум ${ticketPrice} коинов.`, '❌');
                 return;
             }
             userBalance -= ticketPrice;
-            showModal('🎟️ Билет получен!', `Вы успешно обменяли ${ticketPrice} коинов на билет текущего тиража!`, '🎉');
+            showModal('🎟️ Билет получен!', `Вы успешно обменяли ${ticketPrice} коинов на билет!`, '🎉');
             updateUI();
         }
 
@@ -755,7 +791,7 @@
             userJackpotWon += winAmount;
             jackpotPool = 5000.00;
             document.getElementById('winner-announcement').innerText = `🏆 Вы сорвали Джекпот (+${winAmount.toFixed(2)} коинов)!`;
-            showModal('🏆 СУПЕР ДЖЕКПОТ!', `Поздравляем! Вы сорвали банк джекпота размером ${winAmount.toFixed(2)} коинов!`, '👑');
+            showModal('🏆 СУПЕР ДЖЕКПОТ!', `Вы сорвали банк джекпота ${winAmount.toFixed(2)} коинов!`, '👑');
             updateUI();
         }
 
@@ -778,10 +814,6 @@
             }
         }
 
-        function showFullPolicyModal() {
-            showModal('📜 Юридическая информация', 'Проект является исключительно симулятором в развлекательных целях. Играйте честно и получайте удовольствие!', '⚖️');
-        }
-
         function showModal(title, text, icon = '🎉') {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-text').innerText = text;
@@ -794,4 +826,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
