@@ -100,7 +100,7 @@
                         <div id="reel-3" class="transition-all duration-300 transform select-none drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">🎰</div>
                     </div>
                     <div id="slot-result" class="text-center text-xs font-semibold text-yellow-300 mt-3.5 h-5 drop-shadow">
-                        Соберите комбинацию 7️⃣7️⃣7️⃣ или одинаковые символы!
+                        7️⃣7️⃣7️⃣ (50x), 💎 (20x), 🔔 (10x), Фрукты (5x)
                     </div>
                 </div>
 
@@ -557,9 +557,22 @@
 
             let multiplier = 0;
             if (s1 === '7️⃣' && s2 === '7️⃣' && s3 === '7️⃣') {
-                multiplier = 50;
-            } else if (s1 === s2 && s2 === s3) {
+                // Progressive Jackpot trigger on 777!
+                const jackpotWin = jackpotPool;
+                userJackpotWon += jackpotWin;
+                userBalance += jackpotWin;
+                jackpotPool = 5000.00;
+                showModal('🏆 СУПЕР ДЖЕКПОТ 777!', `Потрясающе! Выпали три семёрочки 7️⃣7️⃣7️⃣! Вы сорвали прогрессивный джекпот: +${jackpotWin.toFixed(2)} коинов!`, '👑');
+                isSlotSpinning = false;
+                document.getElementById('slot-spin-btn').disabled = false;
+                updateUI();
+                return;
+            } else if (s1 === '💎' && s2 === '💎' && s3 === '💎') {
+                multiplier = 20;
+            } else if (s1 === '🔔' && s2 === '🔔' && s3 === '🔔') {
                 multiplier = 10;
+            } else if (s1 === s2 && s2 === s3) {
+                multiplier = 5;
             } else if (s1 === s2 || s2 === s3 || s1 === s3) {
                 multiplier = 2;
             }
@@ -568,7 +581,7 @@
                 let win = slotBet * multiplier;
                 userBalance += win;
                 document.getElementById('slot-result').innerHTML = `🎉 Выигрыш! Комбинация дает <b class="text-yellow-400">x${multiplier} (+${win} 🪙)</b>!`;
-                showModal('🎰 ДЖЕКПОТ СЛОТА!', `Поздравляем! Выпали ${s1}${s2}${s3}! Ваш выигрыш: +${win} коинов!`, '🏆');
+                showModal('🎰 ВЫИГРЫШ В СЛОТАХ!', `Поздравляем! Выпали ${s1}${s2}${s3}! Ваш выигрыш: +${win} коинов (x${multiplier})!`, '🏆');
             } else {
                 document.getElementById('slot-result').innerText = '😢 Ничего не выпало. Попробуйте ещё раз!';
             }
@@ -781,4 +794,4 @@
         }
     </script>
 </body>
-                            </html>
+</html>
